@@ -1,4 +1,3 @@
-# VSD-RTL-Design-SKY130
 #  RTL Design using Verilog with    SKY130
 
 ## Table of Contents
@@ -9,19 +8,21 @@
  - Gate level Synthesis,Synthesis simulation mismatch.
  - If, Case, For loop, For Generate
 
+ 
 ## *Introduction to Verilog RTL Design and Synthesis*
-![Netlist to Simulation](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/Netlist.JPG)
 
 **SIMULATION**
 Simulator -->The output is evaluated for change in Input.
 Design-->Set of Verilog codes that adheres to the specifications.
 Test Bench-->Applies test vectors to the design.
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/block_diagram.JPG)
+
  
 **SYNTHESIS**
 
 Synthesizer-->Converts RTL to Netlist.
-![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/block_diagram.JPG)
-
+![RTL to Netlist](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/Verify.JPG)
 .lib files
  - Collection of logical modules including basic gates such as And, Or and  			      	  		Not
  -  Contains different flavours of the same gate
@@ -31,7 +32,9 @@ Synthesizer-->Converts RTL to Netlist.
 	-Fast
  - Different flavors of the same cell are needed as they can be used in a variety of applications.  For example, depending on the speed of the cell it can be classified into Faster and Slower Cells.
  - The synthesizer needs to be guided to select the appropriate flavor of cell for optimum implementation of the logic circuit. This guidance is called “Constraints”
-![RTL to Netlist](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/Verify.JPG)
+
+![Netlist to Simulation](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/Netlist.JPG)
+
 
 **Faster Cells vs Slower cells**
 
@@ -95,7 +98,7 @@ endmodule
 
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/gtk_goodmux.jpg)
 
-![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/netlist_mux.jpg)
+**Synthesis** 
 
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/read_liberty.jpg)
 
@@ -105,9 +108,10 @@ endmodule
 
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/write_netlits_mux.jpg)
 
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/netlist_mux.jpg)
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/show_mux.jpg)
 
-**SYNTHESIS OF 2X1 MUX**
 
 # *Timing libs, Hierarchy versus flat synthesis and efficient flop styles*
 To read the library file
@@ -119,7 +123,7 @@ gvim <Repository Path>/my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
 where 
 130-->Process node
 fd-->Foundary
-sc-->Standard cell library
+sc-->Ftandard cell library
 hd-->High Density
 tt-->Typical type
 025C-->Temperature
@@ -141,7 +145,6 @@ Process. There is a variation in process during fabrication. Voltage and tempera
 Submodule level synthesis
  - In a design with multiple instances we can use this to synthesize once and replicate it many times and stich together to obtain the netlist file.
  - On the other hand big designs can be broken down synthesised and merged later into a single netlist.
-
 
 Verilog Code of multiple_modules
 ```
@@ -215,17 +218,20 @@ Command to map to the dfflib
 ```
 yosys> dfflibmap -liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
 ```
+Simulation for Asynchronous reset
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/gtk_asyncrest.jpg)
+
+Synthesis for Asynchronous reset
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/show_asyncreset.jpg)
 
 Simulation for Asynchronous and synchronous reset
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/gtk_asyn_syncreset.jpg)
+
+Synthesis for Asynchronous and synchronous reset
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/show_async_syncreset.jpg)
 
 
-
-
-##DAY-3 COMBINATIONAL AND SEQUENTIAL OPTIMISATION
+# DAY-3 COMBINATIONAL AND SEQUENTIAL OPTIMISATION
 
 **Combinational Optimisation**
 Design is optimised for saving area and power. Combinational optimisation can be done by Constant propogationa and Boolean logic optimisation
@@ -234,11 +240,9 @@ Command to Optimise
 ```
 opt_clean –purge
 ```
-
-
 ## Examples
 
-**Module opt_check**
+Module opt_check
 ```
 module opt_check (input a,input b,output y);
 	assign y = a?b:0;
@@ -248,10 +252,11 @@ Module opt_check acts similar to 2X1 Mux
 If a=1,then y=b
 If a=0,then y=0
 
-The above module is optimised into an AND gate
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY3/show_and.jpg)
 
-**Module opt_check3**
+The above module is optimised into an AND gate
+
+Module opt_check3
 ```
 module opt_check3 (input a, input b, input c, output y);
 assign y = a?(c?b:0):0;
@@ -261,6 +266,7 @@ Module opt_check3 works as follows
 If a=0, then y=0 else check for c
 If C is true then y=B
 else 0
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY3/show_optcheck3.jpg)
 
 The above module is optimised into a 3-Input AND gate.
@@ -286,20 +292,19 @@ else
 end
 endmodule
 ```
-**Simulation**
+Simulation
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY3/gtk_diffconst1.jpg)
 	In the above GTKwave though reset went to 0 q is waiting for the posedge of the clk.
 
-**Synthesis**
+Synthesis
 
 Map the DFFlib
 ```
 dfflibmap –liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
 ```
-
-
-The Reset in Standard Cell  is active low but we have coded it to be active high so an inverter is inferred by the synthesizer for the input of the reset
+Synthesis
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY3/show_dffconst1.jpg)
+The Reset in Standard Cell  is active low but we have coded it to be active high so an inverter is inferred by the synthesizer for the input of the reset
 
 **OPTIMISATION FOR UNUSED OUTPUT**
 In some cases all the outputs present might not be assigned and remain unsed. It is unwise to translate them into hardware. 
@@ -320,10 +325,10 @@ begin
 end
 endmodule
 ```
+Synthesis
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY3/show_unused.jpg)
-In the above module count is a 3bit reg but the output q is assigned only to bit 0. Bits 2,1 remain unused.
+In the above module count is a 3bit reg but the output q is assigned only to bit 0. Bits 2,1 remain unused.Only 1 Flipflop is inferred though it is a 3bit counter.
 
-Only 1 Flipflop is inferred though it is a 3bit counter.
 ## Gate Level Synthesis ,Synthesis Simulation mismatch and Blocking Non blocking statements
 
 Gate level Simulation (GLS) is needed to verify the logical correctness of the circuit and ensuring to meet the timing design criteria is met.
@@ -349,7 +354,7 @@ This can happen because of some reasons like Missing sensitivity list, Blocking 
  - The simulation works by change in inputs results in change of outputs
  - There might be mismatch in netlists of simulator and synthesizer as synthesizer does not look at sensitivity lists
  - 
-**Simulation synthesis mismatch-Missing sensitivity list**
+Simulation synthesis mismatch-Missing sensitivity list
 
 ![iverilog.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/iverilog.jpg)
 
@@ -399,7 +404,9 @@ endmodule
 **Simulation synthesis mismatch-Blocking Statements**
 
 ![gtk_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gtk_blocking.jpg)
+
 ![show_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/show_blocking.jpg)
+
 ![gls_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gls_blocking.jpg)
 
 
@@ -443,6 +450,16 @@ z=y;
  - Combinational circuits cannot have a inferred latch
  - However, in sequential circuits for some cases like that of counters using an incomplete If will not result in a inferred latch.For these cases an incomplete If can be used.
  
+Simulation
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/gtk_incompif.jpg)
+
+ Synthesis
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/latch_incompif.jpg)
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_icompf.jpg)
+
+
 **Case Statements**
 - The case statments are used inside the always block
  - Register type variables are used in case statements
@@ -460,6 +477,14 @@ case(signal)
               Statements
               end
 ```
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/gtk_comcase.jpg)
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_compcase.jpg)
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/gtk_incomcase.jpg)
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_incompcase.jpg)
 
 **Overlapping Case Statements**
 Let us take the below example
@@ -480,7 +505,9 @@ case(signal)
  endcase
 ```
 In the above code the statements 3 and 4 matches and we get an unpredictable output as the case statements check for every case.
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/gtk_badcase.jpg)
 
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_badcase.jpg)
 
 **FOR Loops**
 ```
@@ -497,6 +524,15 @@ end
 end
 endmodule
 ```
+Simulation of 4x1 Mux
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/gtk_muxgenerate.jpg)
+Synthesis of 4x1 Mux
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_muxgenerate.jpg)
+
+Simulation of Demux
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/gtk_demuxgenerate.jpg)
+Synthesis of Demux
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_demuxgenerate.jpg)
 
 **FOR Generate**
 ```
@@ -514,6 +550,22 @@ assign sum[7:0] = int_sum;
 assign sum[8] = int_co[7];
 endmodule
 ```
+We have to invoke the full adder also otherwise it will throw an error
 
+```
+iverilog fa.v rca.v tb_rca.v
+./a.out
+./gtkwave 
+```
+Simulation of RCA
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/gtk_rca.jpg)
 
+```
+read_verilog rca.v fa.v
+synth -top rca
+abc -liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+write_verilog rca_net.v
+```
+Synthesis of RCA
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_rca.jpg)
 

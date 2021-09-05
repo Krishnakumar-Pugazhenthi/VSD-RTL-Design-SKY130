@@ -10,6 +10,7 @@
  - If, Case, For loop, For Generate
 
 ## *Introduction to Verilog RTL Design and Synthesis*
+![Netlist to Simulation](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/Netlist.JPG)
 
 **SIMULATION**
 Simulator -->The output is evaluated for change in Input.
@@ -19,6 +20,7 @@ Test Bench-->Applies test vectors to the design.
 **SYNTHESIS**
 
 Synthesizer-->Converts RTL to Netlist.
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/block_diagram.JPG)
 
 .lib files
  - Collection of logical modules including basic gates such as And, Or and  			      	  		Not
@@ -29,6 +31,7 @@ Synthesizer-->Converts RTL to Netlist.
 	-Fast
  - Different flavors of the same cell are needed as they can be used in a variety of applications.  For example, depending on the speed of the cell it can be classified into Faster and Slower Cells.
  - The synthesizer needs to be guided to select the appropriate flavor of cell for optimum implementation of the logic circuit. This guidance is called “Constraints”
+![RTL to Netlist](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/Verify.JPG)
 
 **Faster Cells vs Slower cells**
 
@@ -88,6 +91,21 @@ always #10 i0 = ~i0;
 always #55 i1 = ~i1;
 endmodule
 ```
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/dumpfile.jpg)
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/gtk_goodmux.jpg)
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/netlist_mux.jpg)
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/read_liberty.jpg)
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/read_verilog.jpg)
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/synth%20goodmux.jpg)
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/write_netlits_mux.jpg)
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/show_mux.jpg)
 
 **SYNTHESIS OF 2X1 MUX**
 
@@ -101,7 +119,7 @@ gvim <Repository Path>/my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
 where 
 130-->Process node
 fd-->Foundary
-sc-->Ftandard cell library
+sc-->Standard cell library
 hd-->High Density
 tt-->Typical type
 025C-->Temperature
@@ -123,6 +141,7 @@ Process. There is a variation in process during fabrication. Voltage and tempera
 Submodule level synthesis
  - In a design with multiple instances we can use this to synthesize once and replicate it many times and stich together to obtain the netlist file.
  - On the other hand big designs can be broken down synthesised and merged later into a single netlist.
+
 
 Verilog Code of multiple_modules
 ```

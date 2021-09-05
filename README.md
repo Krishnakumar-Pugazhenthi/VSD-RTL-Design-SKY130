@@ -639,7 +639,7 @@ Synthesis of RCA
 
 ## Acknowledgement
 
- - Kunal ghosh- Co-founder (VSD Corp Pvt Limited)
- - Shon Taware
- - VSD IAT Platform
+ - [Kunal Ghosh- Co-founder (VSD Corp Pvt Limited)](https://www.vlsisystemdesign.com/about-me/)
+ - [Shon Taware](https://github.com/ShonTaware)
+ - [VSD IAT Platform](https://vsdiat.com/home) 
 

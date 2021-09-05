@@ -216,7 +216,7 @@ yosys> !nano multiple_modules_flat.v
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/nano_flatten.jpg)
 
 
-## FLOPS
+## Flipflop coding styles
 
 Why FlipFlops are needed?
 

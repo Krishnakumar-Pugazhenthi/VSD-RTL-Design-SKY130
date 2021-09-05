@@ -1,5 +1,7 @@
 #  RTL Design using Verilog with    SKY130
 
+![enter image description here](https://github.com/VictorySpecificationII/Sky130-VLSI-Workshop/raw/master/Images/VSD/vsdbanner.png?raw=true)
+ **WORKSHOP(Sept 1- Sept 5)**
 ## Table of Contents
 
  - Introduction to Verilog RTL Design and Synthesis.
@@ -9,12 +11,14 @@
  - If, Case, For loop, For Generate
 
  
-## *Introduction to Verilog RTL Design and Synthesis*
+## *Day1-Introduction to Verilog RTL Design and Synthesis*
 
 **SIMULATION**
 
 Simulator -->The output is evaluated for change in Input.
+
 Design-->Set of Verilog codes that adheres to the specifications.
+
 Test Bench-->Applies test vectors to the design.
 
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/block_diagram.JPG)
@@ -109,6 +113,15 @@ endmodule
 
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/synth%20goodmux.jpg)
 
+After abc liberty command in Yosys 0.7 the individual gates are relalized  as shown below
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/yosys.7.JPG)
+
+Wherea in Yosys 0.9 below after the abc liberty command it will be realized as a whole mux instead of gates.
+
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/yosys.9.JPG)
+The above difference is due to the different versions of the Yosys synthesizer
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/write_netlits_mux.jpg)
 
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/netlist_mux.jpg)
@@ -116,7 +129,7 @@ endmodule
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/show_mux.jpg)
 
 
-# *Timing libs, Hierarchy versus flat synthesis and efficient flop styles*
+# *Day2-Timing libs, Hierarchy versus flat synthesis and efficient flop styles*
 To read the library file
 ```
 gvim <Repository Path>/my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
@@ -245,7 +258,7 @@ Synthesis for Asynchronous and synchronous reset
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/show_async_syncreset.jpg)
 
 
-# DAY-3 COMBINATIONAL AND SEQUENTIAL OPTIMISATION
+# *DAY-3 COMBINATIONAL AND SEQUENTIAL OPTIMISATION*
 
 **Combinational Optimisation**
 Design is optimised for saving area and power. Combinational optimisation can be done by Constant propogationa and Boolean logic optimisation
@@ -350,7 +363,7 @@ Synthesis
 
 In the above module count is a 3bit reg but the output q is assigned only to bit 0. Bits 2,1 remain unused.Only 1 Flipflop is inferred though it is a 3bit counter.
 
-## Day 4-Gate Level Synthesis ,Synthesis Simulation mismatch and Blocking Non blocking statements
+## *Day 4-Gate Level Synthesis ,Synthesis Simulation mismatch and Blocking Non blocking statements*
 
 Gate level Simulation (GLS) is needed to verify the logical correctness of the circuit and ensuring to meet the timing design criteria is met.
 
@@ -445,7 +458,7 @@ GLS
 ![gls_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gls_blocking.jpg)
 
 
-# Day 5 - If, Case, For loop, For Generate
+# *Day 5 - If, Case, For loop, For Generate*
 
 **If Statements**
 
@@ -457,23 +470,19 @@ General Syntax of If
 ```
 				    if <expression1>
 				    begin
-			        ---------
-                    ---------
+			        statements
                     end
                     else if <expression2>
                     begin
-                    ---------
-                    ---------
+                    statements
                     end
                     else if <expression3>
                     begin
-                    ---------
-                    ---------
+                    statements
                     end
                     else
                     begin
-                    ---------
-                    ---------
+                    statements
                 end
 ```
 Dangers of incomplete If
@@ -486,11 +495,13 @@ z=y;
  - However, in sequential circuits for some cases like that of counters using an incomplete If will not result in a inferred latch.For these cases an incomplete If can be used.
  
 Simulation
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/gtk_incompif.jpg)
 
  Synthesis
 
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/latch_incompif.jpg)
+
 A latch is inferred in the above diagram
 
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_icompf.jpg)

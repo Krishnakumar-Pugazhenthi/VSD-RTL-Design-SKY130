@@ -12,6 +12,7 @@
 ## *Introduction to Verilog RTL Design and Synthesis*
 
 **SIMULATION**
+
 Simulator -->The output is evaluated for change in Input.
 Design-->Set of Verilog codes that adheres to the specifications.
 Test Bench-->Applies test vectors to the design.
@@ -22,7 +23,9 @@ Test Bench-->Applies test vectors to the design.
 **SYNTHESIS**
 
 Synthesizer-->Converts RTL to Netlist.
+
 ![RTL to Netlist](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY1/Verify.JPG)
+
 .lib files
  - Collection of logical modules including basic gates such as And, Or and  			      	  		Not
  -  Contains different flavours of the same gate
@@ -118,7 +121,9 @@ To read the library file
 ```
 gvim <Repository Path>/my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
 ```
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/standard_cell_library.jpg)
+
 "sky130_fd_sc_hd__tt_025C_1v80"
 where 
 130-->Process node
@@ -134,7 +139,9 @@ tt-->Typical type
  - It is designed for high density.
  - this library enables lower dynamic power consumption, higher routed gated density, leakage power and comparable timing.
  -  Flip-flops and  Latches have scan equivalents for scan chain creation.
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/gate_flavour_type1.jpg)
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/gate_flavour_type2.jpg)
 
 Variations may happen due to the Process, Temperature or voltage
@@ -174,23 +181,26 @@ yosys> show
 ```
 
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/show_hierarchy.jpg)
+
 ```
 yosys> !nano multiple_modules_hier.v
 ```
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/nano_heirarchy.jpg)
 
 **Flatten**
+
 After the hierarchical synthesis we have to flatten
 ```
 yosys> flatten
 yosys> show
 ```
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/show_flatten.jpg)
+
 ```
 yosys> !nano multiple_modules_flat.v
 ```
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/nano_flatten.jpg)
-
 
 
 ## FLOPS
@@ -219,15 +229,19 @@ Command to map to the dfflib
 yosys> dfflibmap -liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
 ```
 Simulation for Asynchronous reset
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/gtk_asyncrest.jpg)
 
 Synthesis for Asynchronous reset
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/show_asyncreset.jpg)
 
 Simulation for Asynchronous and synchronous reset
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/gtk_asyn_syncreset.jpg)
 
 Synthesis for Asynchronous and synchronous reset
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/show_async_syncreset.jpg)
 
 
@@ -280,6 +294,7 @@ Sequential optimisation can be done by the following methods
  - Cloning of Logic-->Physical aware synthesis
 
 ## Examples
+
 Module dff_const1	
 ```
 module dff_const1(input clk, input reset, output reg q);
@@ -293,7 +308,9 @@ end
 endmodule
 ```
 Simulation
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY3/gtk_diffconst1.jpg)
+
 	In the above GTKwave though reset went to 0 q is waiting for the posedge of the clk.
 
 Synthesis
@@ -303,7 +320,9 @@ Map the DFFlib
 dfflibmap –liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
 ```
 Synthesis
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY3/show_dffconst1.jpg)
+
 The Reset in Standard Cell  is active low but we have coded it to be active high so an inverter is inferred by the synthesizer for the input of the reset
 
 **OPTIMISATION FOR UNUSED OUTPUT**
@@ -326,13 +345,17 @@ end
 endmodule
 ```
 Synthesis
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY3/show_unused.jpg)
+
 In the above module count is a 3bit reg but the output q is assigned only to bit 0. Bits 2,1 remain unused.Only 1 Flipflop is inferred though it is a 3bit counter.
 
-## Gate Level Synthesis ,Synthesis Simulation mismatch and Blocking Non blocking statements
+## Day 4-Gate Level Synthesis ,Synthesis Simulation mismatch and Blocking Non blocking statements
 
 Gate level Simulation (GLS) is needed to verify the logical correctness of the circuit and ensuring to meet the timing design criteria is met.
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/GVLM.jpg)
+
 **GLVM**
 
 Let us take the example of a netlist of the function **Y=(a&b)|c**
@@ -354,23 +377,24 @@ This can happen because of some reasons like Missing sensitivity list, Blocking 
  - The simulation works by change in inputs results in change of outputs
  - There might be mismatch in netlists of simulator and synthesizer as synthesizer does not look at sensitivity lists
  - 
-Simulation synthesis mismatch-Missing sensitivity list
-
-![iverilog.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/iverilog.jpg)
 
 Command to perform GLS
 ```
 iverilog ../my_lib/verilog_model/primitives.v ../my_lib/verilog_model/sky130_fd_sc_hd.v ternary_operator_mux_net.v tb_ternary_operator_mux.v
 ```
+Verilog Code
+
 ![ternary_mux.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/ternary_mux.jpg)
 
-![ternary_tb.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/ternary_tb.jpg)
-
-![ternary_tb2.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/ternary_tb2.jpg)
+Simulation 
 
 ![gtk_ternary_mux](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gtk_ternarymux.jpg)
 
+GLS
+
 ![gls_ternary_mux](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gls_ternarymux.jpg)
+
+Synthesis
 
 ![show_ternarymux.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/show_ternarymux.jpg)
 
@@ -385,9 +409,15 @@ begin
 end
 endmodule
 ```
+RTL Simulation
+
 ![gtk_badmux.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gtk_badmux.jpg)
+
+GLS 
+
 ![gls_badmux.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gls_badmux.jpg)
 
+From the above RTL simulation and GLS there is a clear simulation simulation synthesis mismatch
 
 **Blocking and Non Blocking**
 
@@ -400,13 +430,18 @@ endmodule
  - Assigns the RHS value to LHS
  - Parallel Execution
 
-## Example
+
 **Simulation synthesis mismatch-Blocking Statements**
+
+Simulation
 
 ![gtk_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gtk_blocking.jpg)
 
+Synthesis
+
 ![show_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/show_blocking.jpg)
 
+GLS 
 ![gls_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gls_blocking.jpg)
 
 
@@ -456,6 +491,7 @@ Simulation
  Synthesis
 
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/latch_incompif.jpg)
+A latch is inferred in the above diagram
 
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_icompf.jpg)
 
@@ -478,11 +514,19 @@ case(signal)
               end
 ```
 
+Simulation of Complete case
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/gtk_comcase.jpg)
+
+Synthesis of Complete case
 
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_compcase.jpg)
 
+Simulation of Incomplete case
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/gtk_incomcase.jpg)
+
+Synthesis of Incomplete case
 
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_incompcase.jpg)
 
@@ -505,7 +549,12 @@ case(signal)
  endcase
 ```
 In the above code the statements 3 and 4 matches and we get an unpredictable output as the case statements check for every case.
+
+Simulation of overlapping case 
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/gtk_badcase.jpg)
+
+Synthesis of overlapping case 
 
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_badcase.jpg)
 
@@ -525,13 +574,19 @@ end
 endmodule
 ```
 Simulation of 4x1 Mux
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/gtk_muxgenerate.jpg)
+
 Synthesis of 4x1 Mux
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_muxgenerate.jpg)
 
 Simulation of Demux
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/gtk_demuxgenerate.jpg)
+
 Synthesis of Demux
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_demuxgenerate.jpg)
 
 **FOR Generate**
@@ -558,6 +613,7 @@ iverilog fa.v rca.v tb_rca.v
 ./gtkwave 
 ```
 Simulation of RCA
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/gtk_rca.jpg)
 
 ```
@@ -567,5 +623,6 @@ abc -liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
 write_verilog rca_net.v
 ```
 Synthesis of RCA
+
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_rca.jpg)
 

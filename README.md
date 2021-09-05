@@ -91,12 +91,12 @@ endmodule
 
 **SYNTHESIS OF 2X1 MUX**
 
-# Timing libs, Hierarchy versus flat synthesis and efficient flop styles
-
-
+# *Timing libs, Hierarchy versus flat synthesis and efficient flop styles*
+To read the library file
 ```
 gvim <Repository Path>/my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
 ```
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/standard_cell_library.jpg)
 "sky130_fd_sc_hd__tt_025C_1v80"
 where 
 130-->Process node
@@ -112,12 +112,19 @@ tt-->Typical type
  - It is designed for high density.
  - this library enables lower dynamic power consumption, higher routed gated density, leakage power and comparable timing.
  -  Flip-flops and  Latches have scan equivalents for scan chain creation.
-
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/gate_flavour_type1.jpg)
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/gate_flavour_type2.jpg)
 
 Variations may happen due to the Process, Temperature or voltage
 Process. There is a variation in process during fabrication. Voltage and temperature variations also result in behaviour changes.
 
 **Hierarchial Synthesis**
+
+Submodule level synthesis
+ - In a design with multiple instances we can use this to synthesize once and replicate it many times and stich together to obtain the netlist file.
+ - On the other hand big designs can be broken down synthesised and merged later into a single netlist.
+
+Verilog Code of multiple_modules
 ```
 module sub_module2 (input a, input b, output y);
 assign y = a | b;
@@ -131,11 +138,38 @@ module multiple_modules (input a, input b, input c , output y);
 	sub_module2 u2(.a(net1),.b(c),.y(y));  //y = net1|c ,ie y = a&b + c;
 endmodule
 ```
+Heirarchial synthesis of multiple_module
 
-Submodule level synthesis
+```
+$ yosys
+yosys> read_liberty -lib  ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+yosys> read_verilog multiple_module.v
+yosys> synth -top multiple_module
+yosys> abc -liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+yosys> show multiple_modules
+yosys> write_verilog -noattr multiple_modules_hier.v
+yosys> show
+```
 
- - In a design with multiple instances we can use this to synthesize once and replicate it many times and stich together to obtain the netlist file.
- - On the other hand big designs can be broken down synthesised and merged later into a single netlist
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/show_hierarchy.jpg)
+```
+yosys> !nano multiple_modules_hier.v
+```
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/nano_heirarchy.jpg)
+
+**Flatten**
+After the hierarchical synthesis we have to flatten
+```
+yosys> flatten
+yosys> show
+```
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/show_flatten.jpg)
+```
+yosys> !nano multiple_modules_flat.v
+```
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/nano_flatten.jpg)
+
+
 
 ## FLOPS
 
@@ -146,6 +180,28 @@ Why FlipFlops are needed?
  - Flip flops are like storage elements that store values. 
  - Though the inputs of Flipflops are glitching the output of the flop is stable and helps in correct functionality of the circuit.
 
+Verilog Code for asynchronous reset
+```
+module dff_asyncres ( input clk ,  input async_reset , input d , output reg q );
+always @ (posedge clk , posedge async_reset)
+begin
+	if(async_reset)
+		q <= 1'b0;
+	else	
+		q <= d;
+end
+endmodule
+```
+Command to map to the dfflib
+```
+yosys> dfflibmap -liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+```
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/gtk_asyncrest.jpg)
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/show_asyncreset.jpg)
+
+Simulation for Asynchronous and synchronous reset
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/gtk_asyn_syncreset.jpg)
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day%202/show_async_syncreset.jpg)
 
 
 
@@ -249,11 +305,10 @@ endmodule
 In the above module count is a 3bit reg but the output q is assigned only to bit 0. Bits 2,1 remain unused.
 
 Only 1 Flipflop is inferred though it is a 3bit counter.
-
 ## Gate Level Synthesis ,Synthesis Simulation mismatch and Blocking Non blocking statements
 
 Gate level Simulation (GLS) is needed to verify the logical correctness of the circuit and ensuring to meet the timing design criteria is met.
-
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/GVLM.jpg)
 **GLVM**
 
 Let us take the example of a netlist of the function **Y=(a&b)|c**
@@ -274,25 +329,7 @@ This can happen because of some reasons like Missing sensitivity list, Blocking 
 
  - The simulation works by change in inputs results in change of outputs
  - There might be mismatch in netlists of simulator and synthesizer as synthesizer does not look at sensitivity lists
-
-**Blocking and Non Blocking**
-
-**Blocking Statements:**
-
- - Sequentially executed one statement after the other
-
-**Non Blocking Statements:**
-
- - Assigns the RHS value to LHS
- - Parallel Execution
-
-## Example
-
-![gtk_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gtk_blocking.jpg)
-![show_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/show_blocking.jpg)
-![gls_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gls_blocking.jpg)
-
-
+ - 
 **Simulation synthesis mismatch-Missing sensitivity list**
 
 ![iverilog.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/iverilog.jpg)
@@ -313,8 +350,6 @@ iverilog ../my_lib/verilog_model/primitives.v ../my_lib/verilog_model/sky130_fd_
 
 ![show_ternarymux.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/show_ternarymux.jpg)
 
-
-**Simulation synthesis mismatch-Blocking Statements**
 ```
 module bad_mux (input i0 , input i1 , input sel , output reg y);
 always @ (sel)
@@ -328,6 +363,25 @@ endmodule
 ```
 ![gtk_badmux.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gtk_badmux.jpg)
 ![gls_badmux.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gls_badmux.jpg)
+
+
+**Blocking and Non Blocking**
+
+**Blocking Statements:**
+
+ - Sequentially executed one statement after the other
+
+**Non Blocking Statements:**
+
+ - Assigns the RHS value to LHS
+ - Parallel Execution
+
+## Example
+**Simulation synthesis mismatch-Blocking Statements**
+
+![gtk_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gtk_blocking.jpg)
+![show_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/show_blocking.jpg)
+![gls_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gls_blocking.jpg)
 
 
 # Day 5 - If, Case, For loop, For Generate
@@ -441,3 +495,6 @@ assign sum[7:0] = int_sum;
 assign sum[8] = int_co[7];
 endmodule
 ```
+
+
+

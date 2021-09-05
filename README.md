@@ -637,3 +637,9 @@ Synthesis of RCA
 
 ![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/Day5/show_rca.jpg)
 
+## Acknowledgement
+
+ - Kunal ghosh- Co-founder (VSD Corp Pvt Limited)
+ - Shon Taware
+ - VSD IAT Platform
+

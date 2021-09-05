@@ -94,7 +94,7 @@ endmodule
 
 
 
-## COMBINATIONAL AND SEQUENTIAL OPTIMISATION
+##DAY-3 COMBINATIONAL AND SEQUENTIAL OPTIMISATION
 
 **Combinational Optimisation**
 Design is optimised for saving area and power. Combinational optimisation can be done by Constant propogationa and Boolean logic optimisation
@@ -110,7 +110,7 @@ opt_clean –purge
 **Module opt_check**
 ```
 module opt_check (input a,input b,output y);
-assign y = a?b:0;
+	assign y = a?b:0;
 endmodule
 ```
 Module opt_check acts similar to 2X1 Mux 
@@ -118,6 +118,7 @@ If a=1,then y=b
 If a=0,then y=0
 
 The above module is optimised into an AND gate
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY3/show_and.jpg)
 
 **Module opt_check3**
 ```
@@ -129,8 +130,9 @@ Module opt_check3 works as follows
 If a=0, then y=0 else check for c
 If C is true then y=B
 else 0
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY3/show_optcheck3.jpg)
 
-The above module is optimised into an 3-Input AND gate
+The above module is optimised into a 3-Input AND gate.
 
 
 **Sequential Optimisation**
@@ -154,8 +156,8 @@ end
 endmodule
 ```
 **Simulation**
-
-In the above GTKwave though reset went to 0 q is waiting for the posedge of the clk.
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY3/gtk_diffconst1.jpg)
+	In the above GTKwave though reset went to 0 q is waiting for the posedge of the clk.
 
 **Synthesis**
 
@@ -166,7 +168,7 @@ dfflibmap –liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
 
 
 The Reset in Standard Cell  is active low but we have coded it to be active high so an inverter is inferred by the synthesizer for the input of the reset
-
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY3/show_dffconst1.jpg)
 
 **OPTIMISATION FOR UNUSED OUTPUT**
 In some cases all the outputs present might not be assigned and remain unsed. It is unwise to translate them into hardware. 
@@ -187,7 +189,7 @@ begin
 end
 endmodule
 ```
-
+![enter image description here](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY3/show_unused.jpg)
 In the above module count is a 3bit reg but the output q is assigned only to bit 0. Bits 2,1 remain unused.
 
 Only 1 Flipflop is inferred though it is a 3bit counter.
@@ -230,15 +232,33 @@ This can happen because of some reasons like Missing sensitivity list, Blocking 
 
 ## Example
 
+![gtk_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gtk_blocking.jpg)
+![show_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/show_blocking.jpg)
+![gls_blocking.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gls_blocking.jpg)
+
+
 **Simulation synthesis mismatch-Missing sensitivity list**
+
+![iverilog.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/iverilog.jpg)
 
 Command to perform GLS
 ```
 iverilog ../my_lib/verilog_model/primitives.v ../my_lib/verilog_model/sky130_fd_sc_hd.v ternary_operator_mux_net.v tb_ternary_operator_mux.v
 ```
+![ternary_mux.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/ternary_mux.jpg)
+
+![ternary_tb.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/ternary_tb.jpg)
+
+![ternary_tb2.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/ternary_tb2.jpg)
+
+![gtk_ternary_mux](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gtk_ternarymux.jpg)
+
+![gls_ternary_mux](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gls_ternarymux.jpg)
+
+![show_ternarymux.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/show_ternarymux.jpg)
+
 
 **Simulation synthesis mismatch-Blocking Statements**
-
 ```
 module bad_mux (input i0 , input i1 , input sel , output reg y);
 always @ (sel)
@@ -250,6 +270,8 @@ begin
 end
 endmodule
 ```
+![gtk_badmux.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gtk_badmux.jpg)
+![gls_badmux.jpg](https://github.com/Krishnakumar-Pugazhenthi/VSD-RTL-Design-SKY130/blob/main/DAY%204/gls_badmux.jpg)
 
 
 # Day 5 - If, Case, For loop, For Generate

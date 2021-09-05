@@ -1,8 +1,15 @@
 # VSD-RTL-Design-SKY130
 #  RTL Design using Verilog with    SKY130
 
+## Table of Contents
 
-## Introduction to Verilog RTL Design and Synthesis
+ - Introduction to Verilog RTL Design and Synthesis.
+ - Timing libs, Hierarchy versus flat synthesis and efficient flop styles.
+ - Combinational and Sequential Optimisations.
+ - Gate level Synthesis,Synthesis simulation mismatch.
+ - If, Case, For loop, For Generate
+
+## *Introduction to Verilog RTL Design and Synthesis*
 
 **SIMULATION**
 Simulator -->The output is evaluated for change in Input.
@@ -47,7 +54,7 @@ sudo apt install iverilog
 git clone https://github.com/kunalg123/sky130RTLDesignAndSynthesisWorkshop.git
 ```
 
-## SIMULATION OF 2X1 MUX
+**SIMULATION OF 2X1 MUX**
 **Verilog of module Mux**
 ```
 module good_mux (input i0,input i1,input sel,output reg y);
@@ -87,8 +94,57 @@ endmodule
 # Timing libs, Hierarchy versus flat synthesis and efficient flop styles
 
 
+```
+gvim <Repository Path>/my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+```
+"sky130_fd_sc_hd__tt_025C_1v80"
+where 
+130-->Process node
+fd-->Foundary
+sc-->Ftandard cell library
+hd-->High Density
+tt-->Typical type
+025C-->Temperature
+1v80-->Voltage
+
+**sky130_fd_sc_hd library**
+
+ - It is designed for high density.
+ - this library enables lower dynamic power consumption, higher routed gated density, leakage power and comparable timing.
+ -  Flip-flops and  Latches have scan equivalents for scan chain creation.
 
 
+Variations may happen due to the Process, Temperature or voltage
+Process. There is a variation in process during fabrication. Voltage and temperature variations also result in behaviour changes.
+
+**Hierarchial Synthesis**
+```
+module sub_module2 (input a, input b, output y);
+assign y = a | b;
+endmodule
+module sub_module1 (input a, input b, output y);
+assign y = a&b;
+endmodule
+module multiple_modules (input a, input b, input c , output y);
+	wire net1;
+	sub_module1 u1(.a(a),.b(b),.y(net1));  //net1 = a&b
+	sub_module2 u2(.a(net1),.b(c),.y(y));  //y = net1|c ,ie y = a&b + c;
+endmodule
+```
+
+Submodule level synthesis
+
+ - In a design with multiple instances we can use this to synthesize once and replicate it many times and stich together to obtain the netlist file.
+ - On the other hand big designs can be broken down synthesised and merged later into a single netlist
+
+## FLOPS
+
+Why FlipFlops are needed?
+
+ - In a combinational circuit for the given input after a propogation delay we get an output. Due to the propogation delay there will glitch in the output.
+ - If there are many combinational circuits in a design then the output will be more glitchy. In order to avoid this in between the combinational circuits we can use Flipflops
+ - Flip flops are like storage elements that store values. 
+ - Though the inputs of Flipflops are glitching the output of the flop is stable and helps in correct functionality of the circuit.
 
 
 
